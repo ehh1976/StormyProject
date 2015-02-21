@@ -11,7 +11,7 @@ import UIKit
 
 struct Current {
 
-    var temperatureInFahrenheit: Int
+    var temperature: Int?
     var humidity: Int
     var icon: UIImage
     var dateTime: String
@@ -39,7 +39,6 @@ struct Current {
         
         let weather = weatherDictionary["currently"] as NSDictionary
         
-        temperatureInFahrenheit = weather["temperature"] as Int
         humidity = weather["humidity"] as Int
         
         let iconName = weather["icon"] as String
@@ -55,6 +54,13 @@ struct Current {
         windSpeedInMilesPerHour = weather["windSpeed"] as Double
         summary = weather["summary"] as String
         
+        var temperatureInFahrenheit = weather["temperature"] as Int
+        temperature = fahrenheitToCelsuis(temperatureInFahrenheit) as Int!
+    }
+    
+    func fahrenheitToCelsuis (fahrenheit: Int) -> Int{
+        // [°C] = ([°F] - 32) × 5/9
+        return (fahrenheit - 32) * (5 / 9)
     }
 }
    

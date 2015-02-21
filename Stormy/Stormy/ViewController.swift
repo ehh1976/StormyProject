@@ -9,6 +9,7 @@
 import UIKit
 
 class ViewController: UIViewController {
+    @IBOutlet weak var temperatureLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,9 +24,10 @@ class ViewController: UIViewController {
                 let weatherDataObject = NSJSONSerialization.JSONObjectWithData(dataObject!, options: nil, error: nil) as NSDictionary
                 
                 let weather = Current(weatherDictionary: weatherDataObject)
-                
-                //println(weatherDataObject)
-                
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    self.temperatureLabel.text = "\(weather.temperature)"
+                    
+                })
             })
             downloadTask.resume()
         }
