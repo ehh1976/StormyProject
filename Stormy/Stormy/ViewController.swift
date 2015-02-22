@@ -38,27 +38,40 @@ class ViewController: UIViewController {
         if let forecastURL = NSURL(string: "https://api.forecast.io/forecast/\(apikey)/\(talEl)"){
             let sharedSession = NSURLSession.sharedSession()
             let downloadTask: NSURLSessionDownloadTask = sharedSession.downloadTaskWithURL(forecastURL, completionHandler: { (location: NSURL!, response: NSURLResponse!, error: NSError!) -> Void in
-                
-                let dataObject = NSData(contentsOfURL: location)
-                let weatherDataObject = NSJSONSerialization.JSONObjectWithData(dataObject!, options: nil, error: nil) as NSDictionary
-                
-                let weather = Current(weatherDictionary: weatherDataObject)
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.temperatureLabel.text = "\(weather.temperature!)"
-                    self.humidityLabel.text = "\(weather.humidity)"
-                    self.windSpeedLabel.text = "\(weather.windSpeed!)"
-                    self.descriptionLabel.text = "\(weather.summary)"
-                    self.timeLabel.text = "At \(weather.dateTime) it is"
-                    self.locationLabel.text = "Tal-El, Israel"
-                    self.iconImage.image = weather.icon
-                })
+                if (error==nil){
+                    let dataObject = NSData(contentsOfURL: location)
+                    let weatherDataObject = NSJSONSerialization.JSONObjectWithData(dataObject!, options: nil, error: nil) as NSDictionary
+                    
+                    let weather = Current(weatherDictionary: weatherDataObject)
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        self.temperatureLabel.text = "\(weather.temperature!)"
+                        self.humidityLabel.text = "\(weather.humidity)"
+                        self.windSpeedLabel.text = "\(weather.windSpeed!)"
+                        self.descriptionLabel.text = "\(weather.summary)"
+                        self.timeLabel.text = "At \(weather.dateTime) it is"
+                        self.locationLabel.text = "Tal-El, Israel"
+                        self.iconImage.image = weather.icon
+                    
+                        self.indicatorButton.stopAnimating()
+                        self.indicatorButton.hidden = true
+                        self.refreshButton.hidden = false
+                    })
+                }
+                else{
+                    let alert = UIAlertController(title: "Error", message: "Connection failure", preferredStyle: .Alert)
+                    let okAction = UIAlertAction(title: "Ok", style: .Default, handler: nil)
+                    alert.addAction(okAction)
+                    self.presentViewController(alert, animated: true, completion: nil)
+                    
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        self.indicatorButton.stopAnimating()
+                        self.indicatorButton.hidden = true
+                        self.refreshButton.hidden = false
+                    })
+                }
             })
             downloadTask.resume()
         }
-       
-        indicatorButton.stopAnimating()
-        indicatorButton.hidden = true
-        refreshButton.hidden = false
     }
     
     @IBAction func refresh() {
