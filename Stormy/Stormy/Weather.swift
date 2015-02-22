@@ -48,10 +48,18 @@ struct Current {
         let dateSince1970 = NSDate(timeIntervalSince1970: intervalTime)
     
         let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "dd/MM/yyyy hh:mm:ss"
+        //dateFormatter.timeStyle = .MediumStyle
+        //dateFormatter.dateStyle = .ShortStyle
+        //dateFormatter.timeZone = NSTimeZone(abbreviation: "UTC+2.00")
+        //func ltzAbbrev() -> String { return NSTimeZone.systemTimeZone().abbreviation! }
+        //func ltzName() -> String { return NSTimeZone.systemTimeZone().name }
+        //dateFormatter.timeZone = NSTimeZone(abbreviation: ltzAbbrev())
+        dateFormatter.dateFormat = "dd/MM/yyyy HH:mm:ss"
+        dateFormatter.timeZone = NSTimeZone.localTimeZone()
         dateTime = dateFormatter.stringFromDate(dateSince1970) as String!
-       
+
         summary = weather["summary"] as String
+        
         
         let windSpeedInMilesPerHour = weather["windSpeed"] as Double
         windSpeed = NSString(format: "%.2f", (mphTokmh(windSpeedInMilesPerHour))) + " km/h"

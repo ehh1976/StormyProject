@@ -16,9 +16,22 @@ class ViewController: UIViewController {
     @IBOutlet var timeLabel: UILabel!
     @IBOutlet var locationLabel: UILabel!
     @IBOutlet var iconImage: UIImageView!
+    @IBOutlet var refreshButton: UIButton!
+    @IBOutlet var indicatorButton: UIActivityIndicatorView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        indicatorButton.hidden = true
+        refreshButton.hidden = false
+        refreshData()
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+
+    func refreshData(){
         // Do any additional setup after loading the view, typically from a nib.
         let apikey = "2a7636a5544e79525b2bcfb0fee294dd"
         let talEl = "32.928057,35.177280"
@@ -35,20 +48,25 @@ class ViewController: UIViewController {
                     self.humidityLabel.text = "\(weather.humidity)"
                     self.windSpeedLabel.text = "\(weather.windSpeed!)"
                     self.descriptionLabel.text = "\(weather.summary)"
-                    self.timeLabel.text = "\(weather.dateTime)"
+                    self.timeLabel.text = "At \(weather.dateTime) it is"
                     self.locationLabel.text = "Tal-El, Israel"
-                    self.iconImage.image = weather.icon                    
+                    self.iconImage.image = weather.icon
                 })
             })
             downloadTask.resume()
         }
+       
+        indicatorButton.stopAnimating()
+        indicatorButton.hidden = true
+        refreshButton.hidden = false
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    @IBAction func refresh() {
+        indicatorButton.hidden = false
+        refreshButton.hidden = true
+        indicatorButton.startAnimating()
+        refreshData()
     }
-
 
 }
 
