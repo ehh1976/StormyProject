@@ -15,7 +15,7 @@ struct Current {
     var humidity: Int
     var icon: UIImage
     var dateTime: String
-    var windSpeedInMilesPerHour: Double
+    var windSpeed: String!
     var summary: String
 
     init(weatherDictionary: NSDictionary){
@@ -50,17 +50,25 @@ struct Current {
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "dd/MM/yyyy hh:mm:ss"
         dateTime = dateFormatter.stringFromDate(dateSince1970) as String!
-        
-        windSpeedInMilesPerHour = weather["windSpeed"] as Double
+       
         summary = weather["summary"] as String
         
+        let windSpeedInMilesPerHour = weather["windSpeed"] as Double
+        windSpeed = NSString(format: "%.2f", (mphTokmh(windSpeedInMilesPerHour))) + " km/h"
+                
         var temperatureInFahrenheit = weather["temperature"] as Int
-        temperature = fahrenheitToCelsuis(temperatureInFahrenheit) as Int!
+        temperature = fahrenheitToCelsuis(temperatureInFahrenheit) as Int
     }
     
     func fahrenheitToCelsuis (fahrenheit: Int) -> Int{
         // [°C] = ([°F] - 32) × 5/9
-        return (fahrenheit - 32) * (5 / 9)
+        let celsuis = Int((Double(fahrenheit) - 32.0) * (5.0 / 9.0))
+        return celsuis
+    }
+    
+    func mphTokmh (mph: Double)-> Double {
+        let kmh = mph*1.6903
+        return kmh
     }
 }
    

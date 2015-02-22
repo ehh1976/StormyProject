@@ -10,6 +10,12 @@ import UIKit
 
 class ViewController: UIViewController {
     @IBOutlet weak var temperatureLabel: UILabel!
+    @IBOutlet var humidityLabel: UILabel!
+    @IBOutlet var windSpeedLabel: UILabel!
+    @IBOutlet var descriptionLabel: UILabel!
+    @IBOutlet var timeLabel: UILabel!
+    @IBOutlet var locationLabel: UILabel!
+    @IBOutlet var iconImage: UIImageView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,8 +31,13 @@ class ViewController: UIViewController {
                 
                 let weather = Current(weatherDictionary: weatherDataObject)
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.temperatureLabel.text = "\(weather.temperature)"
-                    
+                    self.temperatureLabel.text = "\(weather.temperature!)"
+                    self.humidityLabel.text = "\(weather.humidity)"
+                    self.windSpeedLabel.text = "\(weather.windSpeed!)"
+                    self.descriptionLabel.text = "\(weather.summary)"
+                    self.timeLabel.text = "\(weather.dateTime)"
+                    self.locationLabel.text = "Tal-El, Israel"
+                    self.iconImage.image = weather.icon                    
                 })
             })
             downloadTask.resume()
